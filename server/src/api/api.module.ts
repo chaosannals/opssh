@@ -9,6 +9,9 @@ import { Employee } from './employee/employee.entity';
   imports: [
     TypeOrmModule.forFeature([Employee]),
   ],
+  exports: [
+    EmployeeService,
+  ],
   controllers: [EmployeeController, ScriptController],
   providers: [EmployeeService]
 })
