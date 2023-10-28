@@ -12,13 +12,26 @@ export class EmployeeService {
         private dataSource: DataSource,
     ) { }
 
+    async validate(username: string, pass: string): Promise<Employee> {
+        const password = enc.Base64.stringify(SHA256(pass));
+        return await this.employeeRepository.findOne({
+            where: {
+                username: username,
+                password: password,
+            }
+        });
+    }
+
+    /**
+     * 
+     */
     async ensureAdmin() {
         const queryRunner = this.dataSource.createQueryRunner();
 
         await queryRunner.connect();
         await queryRunner.startTransaction();
         try {
-            const admin = await this.employeeRepository.findOne({where: {id: 1}});
+            const admin = await this.employeeRepository.findOne({ where: { id: 1 } });
             if (!admin) {
                 const a = new Employee();
                 a.id = 1;
@@ -28,7 +41,7 @@ export class EmployeeService {
             }
 
             await queryRunner.commitTransaction();
-        } catch(error) {
+        } catch (error) {
             console.error('error', error);
             await queryRunner.rollbackTransaction();
         } finally {
