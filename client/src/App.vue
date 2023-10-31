@@ -1,14 +1,13 @@
 <template>
-  <KeepAlive>
-    <RouterView v-slot="{Component}">
-        <component :is="Component"/>
-    </RouterView>
-  </KeepAlive>
+  <RouterView v-slot="{ Component }">
+    <KeepAlive>
+      <component :is="Component" />
+    </KeepAlive>
+  </RouterView>
 </template>
 
 <script setup lang="ts">
+
 </script>
 
-<style scoped lang="scss">
-
-</style>
+<style scoped lang="scss"></style>

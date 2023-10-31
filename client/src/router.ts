@@ -1,11 +1,14 @@
 import {
+    RouteRecordRaw,
     createRouter,
     createWebHistory,
 } from "vue-router";
-import { kebabCase } from 'lodash';
+import { isEmpty, kebabCase } from 'lodash';
+import { useAuthStore } from "./stores/AuthStore";
+import { apiTouch } from "./utils/http";
 
-function routePages() {
-    const result = [
+function routePages(): RouteRecordRaw[] {
+    const result: RouteRecordRaw[] = [
         {
             path: '/',
             component: () => import("./pages/IndexPage.vue"),
@@ -22,7 +25,6 @@ function routePages() {
             result.push({
                 path: `/${n}`,
                 alias: `/${n}.html`, // 调试服务器别名带后缀不可用，编译后是正常的。
-                // @ts-ignore
                 component: pages[p],
             });
         }
@@ -36,6 +38,25 @@ export const routes = routePages();
 const router = createRouter({
     history: createWebHistory(),
     routes: routes,
+});
+
+router.beforeEach(async (to) => {
+    const auth = useAuthStore();
+    
+    if (auth.able) {
+        if (to.path != '/login' && isEmpty(auth.token)) {
+            return { path: '/login' };
+        }
+    } else {
+        if (to.path != '/enter') {
+            if (await apiTouch()) {
+                auth.able = true;
+            } else {
+                console.log('enter');
+                return { path: '/enter' };
+            }
+        }
+    }
 });
 
 export default router;
