@@ -7,8 +7,10 @@ import { jwtConstants } from './constants';
 import { LocalStrategy } from './local.strategy';
 import { JwtStrategy } from './jwt.strategy';
 import { JwtAuthGuard } from './jwt-auth.guard';
+import { Permission } from './permission.entity';
 import { APP_GUARD } from '@nestjs/core';
 import { ApiModule } from 'src/api/api.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   imports: [
@@ -18,6 +20,7 @@ import { ApiModule } from 'src/api/api.module';
       secret: jwtConstants.secret,
       signOptions: { expiresIn: '600s' },
     }),
+    TypeOrmModule.forFeature([Permission]),
   ],
   exports: [
     AuthService,
@@ -36,4 +39,4 @@ import { ApiModule } from 'src/api/api.module';
     AuthController,
   ],
 })
-export class AuthModule {}
+export class AuthModule { }

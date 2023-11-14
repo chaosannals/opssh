@@ -9,9 +9,15 @@ export class Record {
   
     @CreateDateColumn()
     createAt: string;
+
+    @Column({default: 0})
+    createBy: number;
   
     @UpdateDateColumn()
     updateAt: string;
+
+    @Column({default: 0})
+    updateBy: number;
   
     @VersionColumn()
     version: number;
