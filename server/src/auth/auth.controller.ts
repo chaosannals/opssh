@@ -18,6 +18,12 @@ export class AuthController {
         };
     }
 
+    @Get("captcha")
+    @Public()
+    captcha() {
+        
+    }
+
     @Post("login")
     @Public()
     @UseGuards(LocalAuthGuard)
