@@ -51,6 +51,7 @@ router.beforeEach(async (to) => {
         if (to.path != '/enter') {
             if (await apiTouch()) {
                 auth.able = true;
+                console.log('able', auth.able);
             } else {
                 console.log('enter');
                 return { path: '/enter' };

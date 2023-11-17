@@ -4,7 +4,7 @@
 
         </div>
         <div class="login-content">
-            <form class="login-form" @submit="onSubmit">
+            <form class="login-form" @submit.prevent="onSubmit">
                 <div class="login-input">
                     <label>用户</label>
                     <input v-model="data.username" />
@@ -33,8 +33,7 @@ const data = reactive({
 
 const auth = useAuthStore();
 
-const onSubmit = async (e: Event) => {
-    e.preventDefault();
+const onSubmit = async () => {
     const response = await apiPost<any>('/auth/login', data);
     auth.token = response.data.access_token as string;
 };

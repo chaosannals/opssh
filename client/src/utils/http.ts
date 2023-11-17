@@ -65,10 +65,31 @@ export const apiPostForm = async <T>(path: string, form: any): Promise<Response<
     });
 };
 
-export const apiTouch = async(): Promise<Boolean> => {
+export interface TouchOptions {
+    scheme: string,
+    host: string,
+    port: number,
+}
+
+export const apiTouch = async (options?: TouchOptions): Promise<Boolean> => {
     try {
-        await apiGet('/auth/touch');
-    } catch (e: Error) {
+        const path = '/auth/touch';
+        if (options) {
+            const uri = `${options.scheme}://${options.host}:${options.port}${path}`;
+            const setting: HttpOptions = {
+                timeout: 30,
+                responseType: ResponseType.JSON,
+                method: 'GET',
+                url: uri,
+            };
+            const client = await getClient();
+            const response = await client.request(setting);
+            return response.ok;
+        } else {
+            const response = await apiGet(path);
+            return response.ok;
+        }
+    } catch (e) {
         console.log("api touch: ", e);
     }
     return false;
