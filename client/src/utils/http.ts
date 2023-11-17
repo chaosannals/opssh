@@ -3,6 +3,9 @@ import { isEmpty } from 'lodash';
 import { stringify } from 'qs';
 import { useAuthStore } from '../stores/AuthStore';
 
+export const API_TOUCH_PATH = '/auth/touch';
+export const API_VALID_PATH = '/auth/validate';
+
 export declare class ApiRequestOptions {
     url?: string;
     path?: string;
@@ -71,26 +74,41 @@ export interface TouchOptions {
     port: number,
 }
 
-export const apiTouch = async (options?: TouchOptions): Promise<Boolean> => {
+export const apiTouch = async (options: TouchOptions): Promise<Boolean> => {
     try {
-        const path = '/auth/touch';
-        if (options) {
-            const uri = `${options.scheme}://${options.host}:${options.port}${path}`;
-            const setting: HttpOptions = {
-                timeout: 30,
-                responseType: ResponseType.JSON,
-                method: 'GET',
-                url: uri,
-            };
-            const client = await getClient();
-            const response = await client.request(setting);
-            return response.ok;
-        } else {
-            const response = await apiGet(path);
-            return response.ok;
-        }
+        const uri = `${options.scheme}://${options.host}:${options.port}${API_TOUCH_PATH}`;
+        const setting: HttpOptions = {
+            timeout: 30,
+            responseType: ResponseType.JSON,
+            method: 'GET',
+            url: uri,
+        };
+        const client = await getClient();
+        const response = await client.request(setting);
+        return response.ok;
     } catch (e) {
         console.log("api touch: ", e);
+    }
+    return false;
+};
+
+export const apiTouchAgain = async (): Promise<Boolean> => {
+    const auth = useAuthStore();
+    return await apiTouch({
+        scheme: auth.server.scheme,
+        host: auth.server.host,
+        port: parseInt(auth.server.port),
+    });
+};
+
+export const apiValidate = async (): Promise<Boolean> => {
+    try {
+        const auth = useAuthStore();
+        const response = await apiGet(API_VALID_PATH);
+        auth.able = response.ok;
+        return auth.able;
+    } catch (e) {
+        console.log("api validate: ", e);
     }
     return false;
 };

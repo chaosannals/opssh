@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Req, Request, Res, UseGuards } from '@nestjs/common';
 import { LocalAuthGuard } from './local-auth.guard';
 import { AuthService } from './auth.service';
 import { Public } from './jwt-auth.guard';
@@ -18,10 +18,12 @@ export class AuthController {
         };
     }
 
-    @Get("captcha")
-    @Public()
-    captcha() {
-        
+    @Get("validate")
+    validate() {
+        return {
+            code: 0,
+            message: 'Ok',
+        };
     }
 
     @Post("login")
@@ -29,5 +31,14 @@ export class AuthController {
     @UseGuards(LocalAuthGuard)
     async login(@Request() req) {
         return this.authService.login(req.employee);
+    }
+
+    @Get("captcha")
+    @Public()
+    captcha(@Req() req, @Res() res) {
+        const captcha = this.authService.makeCaptcha();
+        req.session.code = captcha.text;
+        res.type('image/svg+xml');
+        res.send(captcha.data);
     }
 }

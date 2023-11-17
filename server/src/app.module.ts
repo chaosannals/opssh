@@ -5,6 +5,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { DbSnakeNamingStrategy } from './db-snake-naming.strategy';
 import { EmployeeService } from './api/employee/employee.service';
 import { ConfigModule } from '@nestjs/config';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { resolve } from 'path';
 
 @Module({
   imports: [
@@ -13,10 +15,16 @@ import { ConfigModule } from '@nestjs/config';
       isGlobal: true,
       envFilePath: [
         '.env',
-        '.env.dev',
+        process.env.RUN_MODE == 'prod' ? '.env.prod' : '.env.dev',
       ],
     }),
-    
+
+    // 静态资源渲染
+    ServeStaticModule.forRoot({
+      rootPath: resolve(__dirname, '..', 'assets'),
+      serveRoot: '/assets',
+    }),
+
     // sqlite
     TypeOrmModule.forRootAsync({
       useFactory: () => {
