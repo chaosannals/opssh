@@ -78,7 +78,7 @@ export const apiTouch = async (options: TouchOptions): Promise<Boolean> => {
     try {
         const uri = `${options.scheme}://${options.host}:${options.port}${API_TOUCH_PATH}`;
         const setting: HttpOptions = {
-            timeout: 30,
+            timeout: 4,
             responseType: ResponseType.JSON,
             method: 'GET',
             url: uri,
