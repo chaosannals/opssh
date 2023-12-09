@@ -31,6 +31,19 @@
       "options": {
         "cwd": "${workspaceFolder}/client"
       }
+    },
+    {
+      "label": "server:dev",
+      "type": "shell",
+      // change this to your `beforeBuildCommand`:
+      "command": "npm",
+      "args": [
+        "run",
+        "build"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/server"
+      }
     }
   ]
 }

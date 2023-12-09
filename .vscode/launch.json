@@ -7,7 +7,7 @@
     {
       "type": "lldb",
       "request": "launch",
-      "name": "Tauri Development Debug",
+      "name": "Client Development Debug",
       "cwd": "${workspaceFolder}/client",
       "cargo": {
         "args": [
@@ -22,7 +22,7 @@
     {
       "type": "lldb",
       "request": "launch",
-      "name": "Tauri Production Debug",
+      "name": "Client Production Debug",
       "cwd": "${workspaceFolder}/client",
       "cargo": {
         "args": [
@@ -33,6 +33,20 @@
       },
       // task for the `beforeBuildCommand` if used, must be configured in `.vscode/tasks.json`
       "preLaunchTask": "ui:build"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Server Development Debug",
+      "cwd": "${workspaceFolder}/server",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "program": "${workspaceFolder}/server/src/main.ts",
+      "preLaunchTask": "server:dev",
+      "outFiles": [
+        "${workspaceFolder}/server/dist/**/*.js"
+      ]
     }
   ]
 }
